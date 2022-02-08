@@ -1,11 +1,12 @@
 import React from 'react';
 import { Menu } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const MenuBar = () => {
-  const [activeItem, setActiveItem] = React.useState<string | undefined>(
-    'home'
-  );
+  const location = useLocation();
+  let path =
+    location.pathname === '/' ? 'home' : location.pathname.substring(1);
+  const [activeItem, setActiveItem] = React.useState<string | undefined>(path);
 
   const handleItemClick = (name: string | undefined) => {
     setActiveItem(name);
