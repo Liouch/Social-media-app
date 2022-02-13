@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
 import ApolloProvider from './ApolloProvider';
 import reportWebVitals from './reportWebVitals';
 

@@ -4,7 +4,6 @@ import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
-// import 'fomantic-ui-css/semantic.min.css';
 import 'semantic-ui-css/semantic.min.css';
 import './App.css';
 import MenuBar from './components/MenuBar';
