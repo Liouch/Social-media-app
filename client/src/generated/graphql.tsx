@@ -2,9 +2,15 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
 const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -41,39 +47,32 @@ export type Mutation = {
   register: User;
 };
 
-
 export type MutationCreateCommentArgs = {
   body: Scalars['String'];
   postId: Scalars['String'];
 };
 
-
 export type MutationCreatePostArgs = {
   body: Scalars['String'];
 };
-
 
 export type MutationDeleteCommentArgs = {
   commentId: Scalars['ID'];
   postId: Scalars['String'];
 };
 
-
 export type MutationDeletePostArgs = {
   postId: Scalars['ID'];
 };
-
 
 export type MutationLikePostArgs = {
   postId: Scalars['ID'];
 };
 
-
 export type MutationLoginArgs = {
   password: Scalars['String'];
   username: Scalars['String'];
 };
-
 
 export type MutationRegisterArgs = {
   registerInput?: InputMaybe<RegisterInput>;
@@ -97,7 +96,6 @@ export type Query = {
   getPosts?: Maybe<Array<Maybe<Post>>>;
 };
 
-
 export type QueryGetPostArgs = {
   postId: Scalars['ID'];
 };
@@ -118,33 +116,50 @@ export type User = {
   username: Scalars['String'];
 };
 
-export type GetPostsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetPostsQueryVariables = Exact<{ [key: string]: never }>;
 
-
-export type GetPostsQuery = { __typename?: 'Query', getPosts?: Array<{ __typename?: 'Post', id: string, body: string, createdAt: string, username: string, likeCount: number, commentCount: number, likes: Array<{ __typename?: 'Like', username: string } | null>, comments: Array<{ __typename?: 'Comment', id: string, username: string, createdAt: string, body: string } | null> } | null> | null };
-
+export type GetPostsQuery = {
+  __typename?: 'Query';
+  getPosts?: Array<{
+    __typename?: 'Post';
+    id: string;
+    body: string;
+    createdAt: string;
+    username: string;
+    likeCount: number;
+    commentCount: number;
+    likes: Array<{ __typename?: 'Like'; username: string } | null>;
+    comments: Array<{
+      __typename?: 'Comment';
+      id: string;
+      username: string;
+      createdAt: string;
+      body: string;
+    } | null>;
+  } | null> | null;
+};
 
 export const GetPostsDocument = gql`
-    query getPosts {
-  getPosts {
-    id
-    body
-    createdAt
-    username
-    likeCount
-    likes {
-      username
-    }
-    commentCount
-    comments {
+  query GetPosts {
+    getPosts {
       id
-      username
-      createdAt
       body
+      createdAt
+      username
+      likeCount
+      likes {
+        username
+      }
+      commentCount
+      comments {
+        id
+        username
+        createdAt
+        body
+      }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useGetPostsQuery__
@@ -161,25 +176,42 @@ export const GetPostsDocument = gql`
  *   },
  * });
  */
-export function useGetPostsQuery(baseOptions?: Apollo.QueryHookOptions<GetPostsQuery, GetPostsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetPostsQuery, GetPostsQueryVariables>(GetPostsDocument, options);
-      }
-export function useGetPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPostsQuery, GetPostsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetPostsQuery, GetPostsQueryVariables>(GetPostsDocument, options);
-        }
+export function useGetPostsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetPostsQuery, GetPostsQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetPostsQuery, GetPostsQueryVariables>(
+    GetPostsDocument,
+    options
+  );
+}
+export function useGetPostsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetPostsQuery,
+    GetPostsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetPostsQuery, GetPostsQueryVariables>(
+    GetPostsDocument,
+    options
+  );
+}
 export type GetPostsQueryHookResult = ReturnType<typeof useGetPostsQuery>;
-export type GetPostsLazyQueryHookResult = ReturnType<typeof useGetPostsLazyQuery>;
-export type GetPostsQueryResult = Apollo.QueryResult<GetPostsQuery, GetPostsQueryVariables>;
+export type GetPostsLazyQueryHookResult = ReturnType<
+  typeof useGetPostsLazyQuery
+>;
+export type GetPostsQueryResult = Apollo.QueryResult<
+  GetPostsQuery,
+  GetPostsQueryVariables
+>;
 
-      export interface PossibleTypesResultData {
-        possibleTypes: {
-          [key: string]: string[]
-        }
-      }
-      const result: PossibleTypesResultData = {
-  "possibleTypes": {}
+export interface PossibleTypesResultData {
+  possibleTypes: {
+    [key: string]: string[];
+  };
+}
+const result: PossibleTypesResultData = {
+  possibleTypes: {},
 };
-      export default result;
-    
+export default result;
