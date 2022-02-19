@@ -2,15 +2,9 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -47,32 +41,39 @@ export type Mutation = {
   register: User;
 };
 
+
 export type MutationCreateCommentArgs = {
   body: Scalars['String'];
   postId: Scalars['String'];
 };
 
+
 export type MutationCreatePostArgs = {
   body: Scalars['String'];
 };
+
 
 export type MutationDeleteCommentArgs = {
   commentId: Scalars['ID'];
   postId: Scalars['String'];
 };
 
+
 export type MutationDeletePostArgs = {
   postId: Scalars['ID'];
 };
+
 
 export type MutationLikePostArgs = {
   postId: Scalars['ID'];
 };
 
+
 export type MutationLoginArgs = {
   password: Scalars['String'];
   username: Scalars['String'];
 };
+
 
 export type MutationRegisterArgs = {
   registerInput?: InputMaybe<RegisterInput>;
@@ -96,6 +97,7 @@ export type Query = {
   getPosts?: Maybe<Array<Maybe<Post>>>;
 };
 
+
 export type QueryGetPostArgs = {
   postId: Scalars['ID'];
 };
@@ -116,50 +118,43 @@ export type User = {
   username: Scalars['String'];
 };
 
-export type GetPostsQueryVariables = Exact<{ [key: string]: never }>;
+export type GetPostsQueryVariables = Exact<{ [key: string]: never; }>;
 
-export type GetPostsQuery = {
-  __typename?: 'Query';
-  getPosts?: Array<{
-    __typename?: 'Post';
-    id: string;
-    body: string;
-    createdAt: string;
-    username: string;
-    likeCount: number;
-    commentCount: number;
-    likes: Array<{ __typename?: 'Like'; username: string } | null>;
-    comments: Array<{
-      __typename?: 'Comment';
-      id: string;
-      username: string;
-      createdAt: string;
-      body: string;
-    } | null>;
-  } | null> | null;
-};
+
+export type GetPostsQuery = { __typename?: 'Query', getPosts?: Array<{ __typename?: 'Post', id: string, body: string, createdAt: string, username: string, likeCount: number, commentCount: number, likes: Array<{ __typename?: 'Like', username: string } | null>, comments: Array<{ __typename?: 'Comment', id: string, username: string, createdAt: string, body: string } | null> } | null> | null };
+
+export type RegisterUserMutationVariables = Exact<{
+  username: Scalars['String'];
+  email: Scalars['String'];
+  password: Scalars['String'];
+  confirmPassword: Scalars['String'];
+}>;
+
+
+export type RegisterUserMutation = { __typename?: 'Mutation', register: { __typename?: 'User', id: string, email: string, username: string, createdAt: string, token: string } };
+
 
 export const GetPostsDocument = gql`
-  query GetPosts {
-    getPosts {
-      id
-      body
-      createdAt
+    query GetPosts {
+  getPosts {
+    id
+    body
+    createdAt
+    username
+    likeCount
+    likes {
       username
-      likeCount
-      likes {
-        username
-      }
-      commentCount
-      comments {
-        id
-        username
-        createdAt
-        body
-      }
+    }
+    commentCount
+    comments {
+      id
+      username
+      createdAt
+      body
     }
   }
-`;
+}
+    `;
 
 /**
  * __useGetPostsQuery__
@@ -176,42 +171,67 @@ export const GetPostsDocument = gql`
  *   },
  * });
  */
-export function useGetPostsQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetPostsQuery, GetPostsQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetPostsQuery, GetPostsQueryVariables>(
-    GetPostsDocument,
-    options
-  );
-}
-export function useGetPostsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetPostsQuery,
-    GetPostsQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetPostsQuery, GetPostsQueryVariables>(
-    GetPostsDocument,
-    options
-  );
-}
+export function useGetPostsQuery(baseOptions?: Apollo.QueryHookOptions<GetPostsQuery, GetPostsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetPostsQuery, GetPostsQueryVariables>(GetPostsDocument, options);
+      }
+export function useGetPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPostsQuery, GetPostsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetPostsQuery, GetPostsQueryVariables>(GetPostsDocument, options);
+        }
 export type GetPostsQueryHookResult = ReturnType<typeof useGetPostsQuery>;
-export type GetPostsLazyQueryHookResult = ReturnType<
-  typeof useGetPostsLazyQuery
->;
-export type GetPostsQueryResult = Apollo.QueryResult<
-  GetPostsQuery,
-  GetPostsQueryVariables
->;
-
-export interface PossibleTypesResultData {
-  possibleTypes: {
-    [key: string]: string[];
-  };
+export type GetPostsLazyQueryHookResult = ReturnType<typeof useGetPostsLazyQuery>;
+export type GetPostsQueryResult = Apollo.QueryResult<GetPostsQuery, GetPostsQueryVariables>;
+export const RegisterUserDocument = gql`
+    mutation RegisterUser($username: String!, $email: String!, $password: String!, $confirmPassword: String!) {
+  register(
+    registerInput: {username: $username, email: $email, password: $password, confirmPassword: $confirmPassword}
+  ) {
+    id
+    email
+    username
+    createdAt
+    token
+  }
 }
-const result: PossibleTypesResultData = {
-  possibleTypes: {},
+    `;
+export type RegisterUserMutationFn = Apollo.MutationFunction<RegisterUserMutation, RegisterUserMutationVariables>;
+
+/**
+ * __useRegisterUserMutation__
+ *
+ * To run a mutation, you first call `useRegisterUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRegisterUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [registerUserMutation, { data, loading, error }] = useRegisterUserMutation({
+ *   variables: {
+ *      username: // value for 'username'
+ *      email: // value for 'email'
+ *      password: // value for 'password'
+ *      confirmPassword: // value for 'confirmPassword'
+ *   },
+ * });
+ */
+export function useRegisterUserMutation(baseOptions?: Apollo.MutationHookOptions<RegisterUserMutation, RegisterUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RegisterUserMutation, RegisterUserMutationVariables>(RegisterUserDocument, options);
+      }
+export type RegisterUserMutationHookResult = ReturnType<typeof useRegisterUserMutation>;
+export type RegisterUserMutationResult = Apollo.MutationResult<RegisterUserMutation>;
+export type RegisterUserMutationOptions = Apollo.BaseMutationOptions<RegisterUserMutation, RegisterUserMutationVariables>;
+
+      export interface PossibleTypesResultData {
+        possibleTypes: {
+          [key: string]: string[]
+        }
+      }
+      const result: PossibleTypesResultData = {
+  "possibleTypes": {}
 };
-export default result;
+      export default result;
+    
