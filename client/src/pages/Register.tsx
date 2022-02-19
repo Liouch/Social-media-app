@@ -1,23 +1,22 @@
 import { ApolloError } from '@apollo/client';
 import React, { useState } from 'react';
 import { Button, Form } from 'semantic-ui-react';
-import {
-  RegisterUserMutationVariables,
-  useRegisterUserMutation,
-} from '../generated/graphql';
+import { useRegisterUserMutation } from '../generated/graphql';
 import { useNavigate } from 'react-router-dom';
+
+import { useForm } from '../utils/hooks';
 
 type Error = ApolloError['graphQLErrors'][number]['extensions'];
 
 function Register() {
   const [errors, setErrors] = useState<Error['errors']>({});
-  const [values, setValues] = useState<RegisterUserMutationVariables>({
+
+  const { onChange, onSubmit, values } = useForm(registerUser, {
     username: '',
     password: '',
     confirmPassword: '',
     email: '',
   });
-
   let navigate = useNavigate();
 
   const [registerUserMutation, { loading, error }] = useRegisterUserMutation({
@@ -30,14 +29,10 @@ function Register() {
     },
   });
 
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [event.target.name]: event.target.value });
-  };
-
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  function registerUser() {
     registerUserMutation();
-  };
+  }
+
   return (
     <div className='form-container'>
       <Form onSubmit={onSubmit} noValidate className={loading ? 'loading' : ''}>
