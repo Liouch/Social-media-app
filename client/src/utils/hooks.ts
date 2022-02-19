@@ -1,10 +1,13 @@
 import { useState } from 'react';
-import { RegisterUserMutationVariables } from '../generated/graphql';
+import {
+  LoginMutationVariables as Login,
+  RegisterUserMutationVariables as Register,
+} from '../generated/graphql';
 
-type initialValues = RegisterUserMutationVariables;
+type InitialValues = Register | Login;
 
-export const useForm = (callback: () => void, initialState: initialValues) => {
-  const [values, setValues] = useState<initialValues>(initialState);
+export const useForm = (callback: () => void, initialState: InitialValues) => {
+  const [values, setValues] = useState<InitialValues>(initialState);
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [event.target.name]: event.target.value });
   };
