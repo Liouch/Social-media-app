@@ -5,11 +5,13 @@ module.exports.validateRegisterInput = (
   confirmPassword
 ) => {
   const errors = {};
+
+  console.log(username);
   if (username.trim() === '') {
     errors.username = 'Username must not be empty';
   }
   if (email.trim() === '') {
-    errors.username = 'Email must not be empty';
+    errors.email = 'Email must not be empty';
   } else {
     // Use regex to check if the email has the email format
     const emailRegExRule =
