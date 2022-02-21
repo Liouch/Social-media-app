@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { ApolloError } from '@apollo/client';
 import { Button, Form } from 'semantic-ui-react';
 import { LoginMutationVariables, useLoginMutation } from '../generated/graphql';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from '../utils/hooks';
+import { AuthContext } from '../context/auth';
 
 type Error = ApolloError['graphQLErrors'][number]['extensions'];
 
 function Login() {
+  const context = useContext(AuthContext);
   const [errors, setErrors] = useState<Error['errors']>({});
   let navigate = useNavigate();
 
@@ -20,7 +22,8 @@ function Login() {
 
   const [loginUserMutation, { loading, error }] = useLoginMutation({
     variables: values as LoginMutationVariables,
-    onCompleted: () => {
+    onCompleted: (data) => {
+      context.login(data.login);
       navigate('/');
     },
     onError: (error: ApolloError) => {

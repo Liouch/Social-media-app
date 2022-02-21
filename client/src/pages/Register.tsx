@@ -1,5 +1,5 @@
 import { ApolloError } from '@apollo/client';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Button, Form } from 'semantic-ui-react';
 import {
   RegisterUserMutationVariables,
@@ -8,10 +8,12 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 import { useForm } from '../utils/hooks';
+import { AuthContext } from '../context/auth';
 
 type Error = ApolloError['graphQLErrors'][number]['extensions'];
 
 function Register() {
+  const context = useContext(AuthContext);
   const [errors, setErrors] = useState<Error['errors']>({});
   const initialValues = {
     username: '',
@@ -25,7 +27,8 @@ function Register() {
 
   const [registerUserMutation, { loading, error }] = useRegisterUserMutation({
     variables: values as RegisterUserMutationVariables,
-    onCompleted: () => {
+    onCompleted: (data) => {
+      context.login(data.register);
       navigate('/');
     },
     onError: (error: ApolloError) => {
