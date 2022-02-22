@@ -13,41 +13,41 @@ const MenuBar = () => {
   const handleItemClick = (name: string | undefined) => {
     setActiveItem(name);
   };
-
-  const menuBar = user ? (
-    <Menu pointing secondary size='massive' color='teal'>
-      <Menu.Item name={user.username} active as={Link} to='/' />
-      <Menu.Menu position='right'>
-        <Menu.Item name='logout' onClick={logout} />
-      </Menu.Menu>
-    </Menu>
-  ) : (
-    <Menu pointing secondary size='massive' color='teal'>
-      <Menu.Item
-        name='home'
-        active={activeItem === 'home'}
-        onClick={(_, data) => handleItemClick(data.name)}
-        as={Link}
-        to='/'
-      />
-      <Menu.Menu position='right'>
+  const menuBar =
+    user && 'username' in user ? (
+      <Menu pointing secondary size='massive' color='teal'>
+        <Menu.Item name={user.username} active as={Link} to='/' />
+        <Menu.Menu position='right'>
+          <Menu.Item name='logout' onClick={logout} />
+        </Menu.Menu>
+      </Menu>
+    ) : (
+      <Menu pointing secondary size='massive' color='teal'>
         <Menu.Item
-          name='login'
-          active={activeItem === 'login'}
+          name='home'
+          active={activeItem === 'home'}
           onClick={(_, data) => handleItemClick(data.name)}
           as={Link}
-          to='/login'
+          to='/'
         />
-        <Menu.Item
-          name='register'
-          active={activeItem === 'register'}
-          onClick={(_, data) => handleItemClick(data.name)}
-          as={Link}
-          to='/register'
-        />
-      </Menu.Menu>
-    </Menu>
-  );
+        <Menu.Menu position='right'>
+          <Menu.Item
+            name='login'
+            active={activeItem === 'login'}
+            onClick={(_, data) => handleItemClick(data.name)}
+            as={Link}
+            to='/login'
+          />
+          <Menu.Item
+            name='register'
+            active={activeItem === 'register'}
+            onClick={(_, data) => handleItemClick(data.name)}
+            as={Link}
+            to='/register'
+          />
+        </Menu.Menu>
+      </Menu>
+    );
 
   return menuBar;
 };
