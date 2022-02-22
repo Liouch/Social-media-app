@@ -1,19 +1,33 @@
+import jwtDecode, { JwtPayload } from 'jwt-decode';
 import React, { createContext, useReducer } from 'react';
 import { LoginMutation } from '../generated/graphql';
 
-type AuthContextType = {
-  user: LoginMutation['login'] | null;
+type InitialState = {
+  user: LoginMutation['login'] | JwtPayload | null;
+};
+
+interface AuthContextType extends InitialState {
   login: (arg: LoginMutation['login']) => void;
   logout: () => void;
-};
+}
 
 type ActionType =
   | { type: 'LOGIN'; payload: LoginMutation['login'] }
   | { type: 'LOGOUT' };
 
-type ItitialState = {
-  user: LoginMutation['login'] | null;
+const initialState: InitialState = {
+  user: null,
 };
+const token = localStorage.getItem('jwtToken');
+if (token) {
+  // check if the token has been expired
+  const decodedToken = jwtDecode<JwtPayload>(token);
+  if (decodedToken.exp && decodedToken.exp * 1000 < Date.now()) {
+    localStorage.removeItem('jwtToken');
+  } else {
+    initialState.user = decodedToken;
+  }
+}
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
@@ -21,7 +35,7 @@ const AuthContext = createContext<AuthContextType>({
   logout: () => {},
 });
 
-const authReducer = (state: ItitialState, action: ActionType) => {
+const authReducer = (state: InitialState, action: ActionType) => {
   switch (action.type) {
     case 'LOGIN':
       return {
@@ -40,9 +54,10 @@ const authReducer = (state: ItitialState, action: ActionType) => {
 };
 
 const AuthProvider = (props: React.PropsWithChildren<{}>) => {
-  const [state, dispatch] = useReducer(authReducer, { user: null });
+  const [state, dispatch] = useReducer(authReducer, initialState);
 
   const login = (userData: LoginMutation['login']) => {
+    localStorage.setItem('jwtToken', userData.token);
     dispatch({
       type: 'LOGIN',
       payload: userData,
@@ -50,6 +65,7 @@ const AuthProvider = (props: React.PropsWithChildren<{}>) => {
   };
 
   const logout = () => {
+    localStorage.removeItem('jwtToken');
     dispatch({
       type: 'LOGOUT',
     });
